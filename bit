@@ -1,0 +1,89 @@
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.StringTokenizer;
+ 
+ 
+public class Solution {
+         
+    static long MOD  = 1000000007;
+    static long[] DT = new long[100000+1];
+    static int[][] NODE  = new int[100000+1][2]; 
+    static ArrayList<Integer>[] EDGE = new ArrayList[100000+1];
+    static int T, N, M, CASE;
+ 
+    public static void main(String[] args) throws Exception{
+ 
+        //System.setIn(new FileInputStream(Solution2.class.getResource("").getPath()+"sample_input.txt"));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+         
+        T = Integer.parseInt(bufferedReader.readLine());
+        StringTokenizer stTokenizer;
+         
+        for(CASE = 1; CASE <= T ; CASE++){
+            stTokenizer = new StringTokenizer(bufferedReader.readLine());
+            N = Integer.parseInt(stTokenizer.nextToken());
+            M = Integer.parseInt(stTokenizer.nextToken());
+             
+            stTokenizer = new StringTokenizer(bufferedReader.readLine());
+             
+            for(int i=1 ; i <=N ; i++){
+                int n = Integer.parseInt(stTokenizer.nextToken());
+                NODE[i] = new int[]{i, n};
+                DT[i] = 0;
+                EDGE[i] = new ArrayList<>();
+            }
+             
+            for(int i=1 ; i <=M ; i++){
+                stTokenizer = new StringTokenizer(bufferedReader.readLine());
+                int a = Integer.parseInt(stTokenizer.nextToken());
+                int b = Integer.parseInt(stTokenizer.nextToken());
+                 
+                if(NODE[a][1] > NODE[b][1]){
+                    EDGE[a].add(b);
+                }else if(NODE[b][1] > NODE[a][1]){
+                    EDGE[b].add(a);
+                }
+            }
+             
+             
+            System.out.println("#"+CASE+" "+solve());
+        }   
+             
+    }
+     
+    public static long solve(){
+         
+        Arrays.sort(NODE, 1, N+1, new Comparator<int[]>() {
+ 
+            @Override
+            public int compare(int[] arg0, int[] arg1) {
+                // TODO Auto-generated method stub
+                return arg0[1] - arg1[1];
+            }
+        });
+         
+        long result = 0;
+         
+        for(int i=1 ; i <=N ; i++){
+             
+            int n = NODE[i][0];
+             
+            for(int j=0 ; j < EDGE[n].size() ; j++){    
+                 
+                int m = EDGE[n].get(j);
+                 
+                DT[n] = (DT[n] + DT[m]+1) % MOD;
+            }           
+            result = (result + DT[n]) % MOD;
+        }
+         
+        return result;
+    }
+ 
+}
+
+#1 5 2 > 6
